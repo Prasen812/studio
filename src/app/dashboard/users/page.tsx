@@ -1,3 +1,4 @@
+
 'use client';
 import { Header } from '@/components/dashboard/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -11,13 +12,14 @@ import {
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/auth-context';
+import { useUser } from '@/context/user-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { initialUsers } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 
 export default function UsersPage() {
     const { user: authUser, isAdmin, loading } = useAuth();
+    const { users } = useUser();
     const router = useRouter();
 
     useEffect(() => {
@@ -57,7 +59,7 @@ export default function UsersPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {initialUsers.map((user) => (
+                    {users.map((user) => (
                       <TableRow key={user.id}>
                         <TableCell>
                           <div className="flex items-center gap-3">

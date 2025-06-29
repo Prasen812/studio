@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -9,13 +10,15 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
-import { initialUsers, conversations as initialConversations } from '@/lib/data';
+import { useUser } from '@/context/user-context';
+import { conversations as initialConversations } from '@/lib/data';
 import type { User, Conversation, ChatMessage } from '@/lib/types';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 export default function ChatPage() {
   const { user: authUser } = useAuth();
+  const { users } = useUser();
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
@@ -23,8 +26,8 @@ export default function ChatPage() {
   const searchParams = useSearchParams();
 
   const currentUser = useMemo(() => {
-    return initialUsers.find(u => u.email === authUser?.email);
-  }, [authUser]);
+    return users.find(u => u.email === authUser?.email);
+  }, [authUser, users]);
 
   const userConversations = useMemo(() => {
     if (!currentUser) return [];
@@ -37,8 +40,8 @@ export default function ChatPage() {
 
   const contacts = useMemo(() => {
     if (!currentUser) return [];
-    return initialUsers.filter(u => u.id !== currentUser.id);
-  }, [currentUser]);
+    return users.filter(u => u.id !== currentUser.id);
+  }, [currentUser, users]);
 
   const handleSelectConversation = useCallback((contact: User) => {
     if(!currentUser) return;
@@ -93,6 +96,12 @@ export default function ChatPage() {
     setMessage('');
   };
 
+  const getOtherParticipant = (conversation: Conversation) => {
+    if (!currentUser) return null;
+    const otherId = conversation.participantIds.find(id => id !== currentUser.id);
+    return users.find(u => u.id === otherId);
+  }
+
   if (!currentUser) {
     return (
       <div className="flex flex-col h-full items-center justify-center">
@@ -142,17 +151,17 @@ export default function ChatPage() {
             <>
               <div className="p-4 border-b flex items-center gap-3">
                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={initialUsers.find(u => u.id === selectedConversation.participantIds.find(id => id !== currentUser.id))?.avatarUrl} data-ai-hint="person avatar" />
-                    <AvatarFallback>{initialUsers.find(u => u.id === selectedConversation.participantIds.find(id => id !== currentUser.id))?.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={getOtherParticipant(selectedConversation)?.avatarUrl} data-ai-hint="person avatar" />
+                    <AvatarFallback>{getOtherParticipant(selectedConversation)?.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h2 className="text-xl font-bold">{initialUsers.find(u => u.id === selectedConversation.participantIds.find(id => id !== currentUser.id))?.name}</h2>
+                    <h2 className="text-xl font-bold">{getOtherParticipant(selectedConversation)?.name}</h2>
                   </div>
               </div>
               <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
                   {selectedConversation.messages.map(msg => {
-                    const sender = initialUsers.find(u => u.id === msg.senderId);
+                    const sender = users.find(u => u.id === msg.senderId);
                     const isCurrentUser = msg.senderId === currentUser.id;
                     return (
                       <div key={msg.id} className={cn("flex items-end gap-2", isCurrentUser ? "justify-end" : "justify-start")}>

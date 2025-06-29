@@ -1,3 +1,4 @@
+
 'use client';
 import * as React from 'react';
 import Link from 'next/link';
@@ -6,6 +7,7 @@ import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, Me
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
+import { UserProvider } from '@/context/user-context';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
@@ -54,6 +56,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
+    <UserProvider>
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <Sidebar>
           <SidebarHeader>
@@ -128,5 +131,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Sidebar>
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
+    </UserProvider>
   );
 }

@@ -1,3 +1,4 @@
+
 'use client';
 import { Header } from '@/components/dashboard/header';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -5,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
+import { useUser } from '@/context/user-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -12,6 +14,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function AdminPage() {
     const { isAdmin, loading } = useAuth();
+    const { addUser } = useUser();
     const router = useRouter();
     const { toast } = useToast();
 
@@ -30,9 +33,10 @@ export default function AdminPage() {
     const handleCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // In a real app, you would call an API to create the user.
-        // For this prototype, we'll just simulate it.
-        console.log('Creating user:', { name, email, password });
+        
+        addUser({ name, email });
+
+        // Simulate async operation and show feedback
         setTimeout(() => {
             toast({
                 title: 'User Created',
@@ -42,7 +46,7 @@ export default function AdminPage() {
             setEmail('');
             setPassword('');
             setIsSubmitting(false);
-        }, 1000);
+        }, 500);
     };
 
 
