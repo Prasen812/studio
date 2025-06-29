@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, MessageSquare } from 'lucide-react';
+import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, MessageSquare, Users } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
@@ -75,14 +75,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </SidebarMenuItem>
               ))}
               {isAdmin && (
-                 <SidebarMenuItem>
-                  <SidebarMenuButton asChild isActive={pathname === '/dashboard/admin'} tooltip="Admin Panel">
-                      <Link href="/dashboard/admin">
-                          <ShieldCheck />
-                          <span>Admin Panel</span>
-                      </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                 <>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/dashboard/admin')} tooltip="Admin Panel">
+                        <Link href="/dashboard/admin">
+                            <ShieldCheck />
+                            <span>Admin Panel</span>
+                        </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname.startsWith('/dashboard/users')} tooltip="Users">
+                        <Link href="/dashboard/users">
+                            <Users />
+                            <span>Users</span>
+                        </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                </>
               )}
             </SidebarMenu>
           </SidebarContent>
