@@ -1,5 +1,6 @@
 'use client';
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Header } from '@/components/dashboard/header';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -19,6 +20,7 @@ export default function ChatPage() {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
 
   const currentUser = useMemo(() => {
     return initialUsers.find(u => u.email === authUser?.email);
@@ -38,11 +40,7 @@ export default function ChatPage() {
     return initialUsers.filter(u => u.id !== currentUser.id);
   }, [currentUser]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [selectedConversation?.messages]);
-
-  const handleSelectConversation = (contact: User) => {
+  const handleSelectConversation = useCallback((contact: User) => {
     if(!currentUser) return;
     let conversation = userConversations.find(c => c.participantIds.includes(contact.id));
     if (conversation) {
@@ -57,7 +55,22 @@ export default function ChatPage() {
       setConversations(prev => [...prev, newConversation]);
       setSelectedConversationId(newConversation.id);
     }
-  };
+  }, [currentUser, userConversations]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedConversation?.messages]);
+
+  useEffect(() => {
+    const userId = searchParams.get('userId');
+    if (userId && contacts.length > 0 && currentUser) {
+      if (userId === currentUser.id) return; // Don't start a chat with yourself
+      const contactToChat = contacts.find(c => c.id === userId);
+      if (contactToChat) {
+        handleSelectConversation(contactToChat);
+      }
+    }
+  }, [searchParams, contacts, currentUser, handleSelectConversation]);
 
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

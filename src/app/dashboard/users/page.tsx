@@ -17,7 +17,7 @@ import { initialUsers } from '@/lib/data';
 import { Button } from '@/components/ui/button';
 
 export default function UsersPage() {
-    const { isAdmin, loading } = useAuth();
+    const { user: authUser, isAdmin, loading } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -26,6 +26,9 @@ export default function UsersPage() {
         }
     }, [isAdmin, loading, router]);
 
+    const handleChat = (userId: string) => {
+        router.push(`/dashboard/chat?userId=${userId}`);
+    };
 
     if(loading || !isAdmin) {
         return (
@@ -67,7 +70,11 @@ export default function UsersPage() {
                         </TableCell>
                         <TableCell>{user.email}</TableCell>
                         <TableCell className="text-right">
-                           <Button variant="outline" size="sm">Edit</Button>
+                           {user.email !== authUser?.email ? (
+                             <Button variant="outline" size="sm" onClick={() => handleChat(user.id)}>Chat</Button>
+                           ) : (
+                             <Button variant="outline" size="sm" disabled>Chat</Button>
+                           )}
                         </TableCell>
                       </TableRow>
                     ))}
