@@ -37,7 +37,7 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <Link href="/dashboard/tasks">
+                <Link href="/dashboard">
                   <Button type="submit" className="w-full">
                     Sign in
                   </Button>

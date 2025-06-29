@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, Calendar, Sparkles, LogOut, Settings, LifeBuoy } from 'lucide-react';
+import { Home, LayoutGrid, Calendar, Sparkles, LogOut, Settings, LifeBuoy } from 'lucide-react';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -21,6 +21,7 @@ import { Logo } from '@/components/icons/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const menuItems = [
+  { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/dashboard/tasks', label: 'Tasks', icon: LayoutGrid },
   { href: '/dashboard/attendance', label: 'Attendance', icon: Calendar },
   { href: '/dashboard/ai-summarizer', label: 'AI Summarizer', icon: Sparkles },
