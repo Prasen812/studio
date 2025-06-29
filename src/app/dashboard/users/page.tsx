@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/context/auth-context';
-import { useUser } from '@/context/user-context';
+import { useApp } from '@/context/app-context';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 
 export default function UsersPage() {
     const { user: authUser, isAdmin, loading } = useAuth();
-    const { users } = useUser();
+    const { users } = useApp();
     const router = useRouter();
 
     useEffect(() => {

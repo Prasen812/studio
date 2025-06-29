@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
-import { useUser } from '@/context/user-context';
+import { useApp } from '@/context/app-context';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -14,7 +14,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function AdminPage() {
     const { isAdmin, loading } = useAuth();
-    const { addUser } = useUser();
+    const { addUser } = useApp();
     const router = useRouter();
     const { toast } = useToast();
 

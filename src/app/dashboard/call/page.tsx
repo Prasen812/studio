@@ -1,8 +1,9 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useUser } from '@/context/user-context';
+import { useApp } from '@/context/app-context';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,7 @@ import { useAuth } from '@/context/auth-context';
 export default function CallPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { users } = useUser();
+  const { users } = useApp();
   const { user: authUser } = useAuth();
   const { toast } = useToast();
 

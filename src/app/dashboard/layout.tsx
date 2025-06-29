@@ -7,7 +7,7 @@ import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, Me
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
-import { UserProvider } from '@/context/user-context';
+import { AppProvider } from '@/context/app-context';
 
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
@@ -54,13 +54,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   };
 
   if (pathname.startsWith('/dashboard/call')) {
-      return <UserProvider>{children}</UserProvider>;
+      return <AppProvider>{children}</AppProvider>;
   }
 
   if (!user) return null;
 
   return (
-    <UserProvider>
+    <AppProvider>
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <Sidebar>
           <SidebarHeader>
@@ -135,6 +135,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Sidebar>
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
-    </UserProvider>
+    </AppProvider>
   );
 }

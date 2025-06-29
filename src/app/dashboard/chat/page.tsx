@@ -11,16 +11,14 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Send, Phone, Video } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
-import { useUser } from '@/context/user-context';
-import { conversations as initialConversations } from '@/lib/data';
+import { useApp } from '@/context/app-context';
 import type { User, Conversation, ChatMessage } from '@/lib/types';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 
 export default function ChatPage() {
   const { user: authUser } = useAuth();
-  const { users } = useUser();
-  const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
+  const { users, conversations, sendMessage, createConversation } = useApp();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -50,16 +48,10 @@ export default function ChatPage() {
     if (conversation) {
       setSelectedConversationId(conversation.id);
     } else {
-      // Create a new conversation
-      const newConversation: Conversation = {
-        id: `conv-${Date.now()}`,
-        participantIds: [currentUser.id, contact.id],
-        messages: [],
-      };
-      setConversations(prev => [...prev, newConversation]);
+      const newConversation = createConversation([currentUser.id, contact.id]);
       setSelectedConversationId(newConversation.id);
     }
-  }, [currentUser, userConversations]);
+  }, [currentUser, userConversations, createConversation]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -80,20 +72,7 @@ export default function ChatPage() {
     e.preventDefault();
     if (!message.trim() || !currentUser || !selectedConversationId) return;
 
-    const newMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      senderId: currentUser.id,
-      content: message,
-      timestamp: new Date().toISOString(),
-    };
-
-    setConversations(prev =>
-      prev.map(c =>
-        c.id === selectedConversationId
-          ? { ...c, messages: [...c.messages, newMessage] }
-          : c
-      )
-    );
+    sendMessage(selectedConversationId, currentUser.id, message);
     setMessage('');
   };
 
