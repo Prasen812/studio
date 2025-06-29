@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Home, LayoutGrid, Calendar, Sparkles, LogOut, Settings, LifeBuoy } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Home, LayoutGrid, Calendar, Sparkles, LogOut, Settings, LifeBuoy, ShieldCheck } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { useAuth } from '@/context/auth-context';
 
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 import {
   SidebarProvider,
   Sidebar,
@@ -19,6 +21,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Logo } from '@/components/icons/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/hooks/use-toast';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
@@ -29,8 +32,26 @@ const menuItems = [
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { toast } = useToast();
   const isMobile = useIsMobile();
   const [open, setOpen] = React.useState(isMobile ? false : true);
+  const { user, isAdmin } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (error: any) {
+      toast({
+        title: 'Logout Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  if (!user) return null;
 
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
@@ -53,6 +74,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+            {isAdmin && (
+               <SidebarMenuItem>
+                <SidebarMenuButton asChild isActive={pathname === '/dashboard/admin'} tooltip="Admin Panel">
+                    <Link href="/dashboard/admin">
+                        <ShieldCheck />
+                        <span>Admin Panel</span>
+                    </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
@@ -71,16 +102,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </SidebarMenuItem>
             <div className="mt-4 flex items-center gap-3 px-2 py-2 border-t">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="https://placehold.co/100x100" alt="Alex Johnson" data-ai-hint="person avatar" />
-                <AvatarFallback>AJ</AvatarFallback>
+                <AvatarImage src={user?.photoURL ?? "https://placehold.co/100x100"} alt={user?.displayName ?? 'User'} data-ai-hint="person avatar" />
+                <AvatarFallback>{user?.email?.charAt(0).toUpperCase() ?? 'U'}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="font-semibold">Alex Johnson</span>
-                <span className="text-xs text-muted-foreground">alex@example.com</span>
+                <span className="font-semibold truncate">{user?.displayName ?? user?.email}</span>
+                <span className="text-xs text-muted-foreground">{isAdmin ? 'Admin' : 'User'}</span>
               </div>
-              <Link href="/login" className="ml-auto">
+              <button onClick={handleLogout} className="ml-auto p-1.5 rounded-md hover:bg-muted">
                 <LogOut className="h-5 w-5 text-muted-foreground hover:text-foreground"/>
-              </Link>
+              </button>
             </div>
           </SidebarMenu>
         </SidebarFooter>
