@@ -1,7 +1,7 @@
-import type { User, Task, AttendanceRecord, AttendanceStatus } from './types';
+import type { User, Task, AttendanceRecord } from './types';
 import { subDays, addDays } from 'date-fns';
 
-export const users: User[] = [
+export const initialUsers: User[] = [
   { name: 'Alex Johnson', email: 'alex@example.com', avatarUrl: 'https://placehold.co/100x100' },
   { name: 'Maria Garcia', email: 'maria@example.com', avatarUrl: 'https://placehold.co/100x100' },
   { name: 'James Smith', email: 'james@example.com', avatarUrl: 'https://placehold.co/100x100' },
@@ -16,7 +16,7 @@ export const tasks: Task[] = [
     label: 'UI',
     priority: 'High',
     dueDate: new Date().toISOString(),
-    assignee: users[0],
+    assignee: initialUsers[0],
   },
   {
     id: 'TASK-2',
@@ -25,7 +25,7 @@ export const tasks: Task[] = [
     label: 'Bugs',
     priority: 'High',
     dueDate: addDays(new Date(), 2).toISOString(),
-    assignee: users[1],
+    assignee: initialUsers[1],
   },
   {
     id: 'TASK-3',
@@ -34,7 +34,7 @@ export const tasks: Task[] = [
     label: 'Documentation',
     priority: 'Medium',
     dueDate: addDays(new Date(), 10).toISOString(),
-    assignee: users[2],
+    assignee: initialUsers[2],
   },
   {
     id: 'TASK-4',
@@ -43,7 +43,7 @@ export const tasks: Task[] = [
     label: 'Features',
     priority: 'Medium',
     dueDate: addDays(new Date(), 5).toISOString(),
-    assignee: users[0],
+    assignee: initialUsers[0],
   },
   {
     id: 'TASK-5',
@@ -52,7 +52,7 @@ export const tasks: Task[] = [
     label: 'UI',
     priority: 'Low',
     dueDate: subDays(new Date(), 2).toISOString(),
-    assignee: users[3],
+    assignee: initialUsers[3],
   },
     {
     id: 'TASK-6',
@@ -61,7 +61,7 @@ export const tasks: Task[] = [
     label: 'Features',
     priority: 'High',
     dueDate: addDays(new Date(), 3).toISOString(),
-    assignee: users[1],
+    assignee: initialUsers[1],
   },
   {
     id: 'TASK-7',
@@ -70,7 +70,7 @@ export const tasks: Task[] = [
     label: 'Features',
     priority: 'Low',
     dueDate: subDays(new Date(), 5).toISOString(),
-    assignee: users[2],
+    assignee: initialUsers[2],
   },
   {
     id: 'TASK-8',
@@ -79,7 +79,7 @@ export const tasks: Task[] = [
     label: 'Documentation',
     priority: 'Medium',
     dueDate: addDays(new Date(), 20).toISOString(),
-    assignee: users[3],
+    assignee: initialUsers[3],
   },
 ];
 
