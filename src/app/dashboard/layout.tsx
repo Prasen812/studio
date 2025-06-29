@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, Users } from 'lucide-react';
+import { Home, LayoutGrid, Calendar, LogOut, Settings, LifeBuoy, ShieldCheck, MessageSquare } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useAuth } from '@/context/auth-context';
@@ -22,13 +22,12 @@ import {
 import { Logo } from '@/components/icons/logo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
-import { UserProvider } from '@/context/user-context';
 
 const menuItems = [
   { href: '/dashboard', label: 'Dashboard', icon: Home },
   { href: '/dashboard/tasks', label: 'Tasks', icon: LayoutGrid },
   { href: '/dashboard/attendance', label: 'Attendance', icon: Calendar },
-  { href: '/dashboard/users', label: 'Users', icon: Users },
+  { href: '/dashboard/chat', label: 'Chat', icon: MessageSquare },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -55,7 +54,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
-    <UserProvider>
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <Sidebar>
           <SidebarHeader>
@@ -120,6 +118,5 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </Sidebar>
         <SidebarInset>{children}</SidebarInset>
       </SidebarProvider>
-    </UserProvider>
   );
 }

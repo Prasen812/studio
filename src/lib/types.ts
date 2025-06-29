@@ -1,4 +1,5 @@
 export type User = {
+  id: string;
   name: string;
   avatarUrl: string;
   email: string;
@@ -24,3 +25,16 @@ export type AttendanceRecord = {
   date: Date;
   status: AttendanceStatus;
 };
+
+export type ChatMessage = {
+  id: string;
+  senderId: string;
+  content: string;
+  timestamp: string;
+}
+
+export type Conversation = {
+  id: string;
+  participantIds: string[];
+  messages: ChatMessage[];
+}

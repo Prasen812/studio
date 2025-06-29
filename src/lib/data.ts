@@ -1,11 +1,12 @@
-import type { User, Task, AttendanceRecord } from './types';
-import { subDays, addDays } from 'date-fns';
+import type { User, Task, AttendanceRecord, Conversation } from './types';
+import { subDays, addDays, subMinutes } from 'date-fns';
 
 export const initialUsers: User[] = [
-  { name: 'Alex Johnson', email: 'alex@example.com', avatarUrl: 'https://placehold.co/100x100' },
-  { name: 'Maria Garcia', email: 'maria@example.com', avatarUrl: 'https://placehold.co/100x100' },
-  { name: 'James Smith', email: 'james@example.com', avatarUrl: 'https://placehold.co/100x100' },
-  { name: 'Ravi Kumar', email: 'ravi@example.com', avatarUrl: 'https://placehold.co/100x100' },
+  { id: 'user-1', name: 'Alex Johnson', email: 'alex@example.com', avatarUrl: 'https://placehold.co/100x100' },
+  { id: 'user-2', name: 'Maria Garcia', email: 'maria@example.com', avatarUrl: 'https://placehold.co/100x100' },
+  { id: 'user-3', name: 'James Smith', email: 'james@example.com', avatarUrl: 'https://placehold.co/100x100' },
+  { id: 'user-4', name: 'Ravi Kumar', email: 'ravi@example.com', avatarUrl: 'https://placehold.co/100x100' },
+  { id: 'user-admin', name: 'Admin', email: 'admin@example.com', avatarUrl: 'https://placehold.co/100x100' },
 ];
 
 export const tasks: Task[] = [
@@ -92,4 +93,31 @@ export const attendanceRecords: AttendanceRecord[] = [
   { date: subDays(new Date(), 5), status: 'Holiday' },
   { date: subDays(new Date(), 8), status: 'Present' },
   { date: subDays(new Date(), 9), status: 'Present' },
+];
+
+export const conversations: Conversation[] = [
+  {
+    id: 'conv-admin-user1',
+    participantIds: ['user-admin', 'user-1'],
+    messages: [
+      { id: 'msg-1', senderId: 'user-1', content: 'Hey, how is the new design coming along?', timestamp: subMinutes(new Date(), 5).toISOString() },
+      { id: 'msg-2', senderId: 'user-admin', content: 'Almost done! Just tweaking the final details. I should be able to push it for review today.', timestamp: subMinutes(new Date(), 3).toISOString() },
+      { id: 'msg-3', senderId: 'user-1', content: 'Awesome, looking forward to seeing it!', timestamp: subMinutes(new Date(), 1).toISOString() },
+    ]
+  },
+  {
+    id: 'conv-admin-user2',
+    participantIds: ['user-admin', 'user-2'],
+    messages: [
+      { id: 'msg-4', senderId: 'user-admin', content: 'Hey Maria, just wanted to check in on the mobile auth bug.', timestamp: subMinutes(new Date(), 40).toISOString() },
+      { id: 'msg-5', senderId: 'user-2', content: 'Hi! I\'m looking into it now. It seems to be an issue with the token refresh logic. I\'ll keep you updated.', timestamp: subMinutes(new Date(), 30).toISOString() },
+    ]
+  },
+    {
+    id: 'conv-user1-user3',
+    participantIds: ['user-1', 'user-3'],
+    messages: [
+      { id: 'msg-6', senderId: 'user-3', content: 'Hey Alex, do you have a moment to review my PR for the API docs?', timestamp: subMinutes(new Date(), 60).toISOString() },
+    ]
+  }
 ];
