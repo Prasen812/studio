@@ -53,6 +53,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   };
 
+  if (pathname.startsWith('/dashboard/call')) {
+      return <UserProvider>{children}</UserProvider>;
+  }
+
   if (!user) return null;
 
   return (

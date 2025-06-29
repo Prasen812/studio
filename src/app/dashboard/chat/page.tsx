@@ -2,13 +2,14 @@
 'use client';
 import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { Header } from '@/components/dashboard/header';
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Send } from 'lucide-react';
+import { Send, Phone, Video } from 'lucide-react';
 import { useAuth } from '@/context/auth-context';
 import { useUser } from '@/context/user-context';
 import { conversations as initialConversations } from '@/lib/data';
@@ -156,6 +157,20 @@ export default function ChatPage() {
                   </Avatar>
                   <div>
                     <h2 className="text-xl font-bold">{getOtherParticipant(selectedConversation)?.name}</h2>
+                  </div>
+                  <div className="ml-auto flex items-center gap-2">
+                    <Link href={`/dashboard/call?userId=${getOtherParticipant(selectedConversation)?.id}&type=voice`}>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <Phone className="h-5 w-5" />
+                            <span className="sr-only">Voice Call</span>
+                        </Button>
+                    </Link>
+                    <Link href={`/dashboard/call?userId=${getOtherParticipant(selectedConversation)?.id}&type=video`}>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                            <Video className="h-5 w-5" />
+                            <span className="sr-only">Video Call</span>
+                        </Button>
+                    </Link>
                   </div>
               </div>
               <ScrollArea className="flex-1 p-4">
