@@ -1,3 +1,6 @@
+
+'use client';
+
 import {
   Activity,
   CheckCircle2,
@@ -22,9 +25,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Header } from '@/components/dashboard/header';
-import { tasks } from '@/lib/data';
+import { useApp } from '@/context/app-context';
 
 export default function DashboardPage() {
+  const { tasks } = useApp();
   const totalTasks = tasks.length;
   const todoTasks = tasks.filter((task) => task.status === 'Todo').length;
   const inProgressTasks = tasks.filter(
